@@ -17,7 +17,6 @@ class DAOItem: NSObject {
     // App Delegate
     let delegate = (UIApplication.shared.delegate as! AppDelegate)
     
-    // Background-Thread Context
     weak var contextMain : NSManagedObjectContext!
     
     class var sharedInstance : DAOItem {

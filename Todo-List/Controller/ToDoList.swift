@@ -43,7 +43,6 @@ class ToDoList: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         let item = self.items[indexPath.row]
         cell.title.text = item.title
-        print(item.done)
         if(item.done == true){
             cell.checkButton.setBackgroundImage(UIImage(named: "done"), for: .normal)
         } else {
