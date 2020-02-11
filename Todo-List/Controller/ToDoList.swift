@@ -8,6 +8,10 @@
 
 import UIKit
 
+private enum CellReuseIdentifier: String {
+    case toDoCell = "ToDoListCell"
+}
+
 class ToDoList: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var addButton: UIButton!
@@ -17,20 +21,21 @@ class ToDoList: UIViewController, UITableViewDelegate, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let dataPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        print(dataPath)
+        //let dataPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        //print(dataPath)
         
         self.items = DAOItem.sharedInstance.getItems()
-        
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
-        self.tableView.register(UINib.init(nibName: "ToDoListCell", bundle: nil), forCellReuseIdentifier: "ToDoListCell")
-        
-        self.addButton.layer.cornerRadius = 25
-
-        // Do any additional setup after loading the view.
+        self.addButton.layer.cornerRadius = 20
+        self.setupTableView()
     }
 
+    //MARK: Table View Setup
+    func setupTableView() {
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+        self.tableView.register(UINib.init(nibName: "ToDoListCell", bundle: nil), forCellReuseIdentifier: CellReuseIdentifier.toDoCell.rawValue)
+        self.tableView.estimatedRowHeight = 55
+    }
 
     // MARK: Table View Delegate
     
@@ -39,7 +44,7 @@ class ToDoList: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = self.tableView.dequeueReusableCell(withIdentifier: "ToDoListCell", for: indexPath) as! ToDoListCell
+        let cell = self.tableView.dequeueReusableCell(withIdentifier: CellReuseIdentifier.toDoCell.rawValue, for: indexPath) as! ToDoListCell
         
         let item = self.items[indexPath.row]
         cell.title.text = item.title
@@ -48,12 +53,11 @@ class ToDoList: UIViewController, UITableViewDelegate, UITableViewDataSource {
         } else {
             cell.checkButton.setBackgroundImage(UIImage(named: "not_done"), for: .normal)
         }
+        
+        let alpha : CGFloat = indexPath.row == 0 ? 0 : CGFloat(indexPath.row) / CGFloat(self.items.count)
+        cell.setBackground(with: alpha)
 
         return cell
-    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 55;
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -75,6 +79,7 @@ class ToDoList: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.tableView.reloadData()
     }
     
+    //MARK: Actions
     
     @IBAction func addItem(_ sender: Any) {
         

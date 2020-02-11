@@ -11,7 +11,7 @@ import UIKit
 class ToDoListCell: UITableViewCell {
 
     @IBOutlet weak var title: UILabel!
-    
+    @IBOutlet weak var coloredView: UIView!
     @IBOutlet weak var checkButton: UIButton!
     
     override func awakeFromNib() {
@@ -20,12 +20,14 @@ class ToDoListCell: UITableViewCell {
         
     }
     
-
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
     }
     
+    func setBackground(with alpha: CGFloat) {
+        self.coloredView.alpha = alpha
+    }
     
 }
